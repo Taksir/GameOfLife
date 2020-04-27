@@ -12,7 +12,12 @@ class gameOfLife:
             np.random.seed(userSeed)
         self.ndim = n # set dimension here
 #         self.grid = np.random.randint(0,2, size = (n+2,n+2)) # 2-D grid for simulatiom
-        self.grid = np.random.choice(2, size=((n+2)*(n+2)), p=[0.98, 0.02]).reshape(n+2, n+2)
+        if n > 100:
+            self.grid = np.random.choice(2, size=((n+2)*(n+2)), p=[0.98, 0.02]).reshape(n+2, n+2)
+        elif n > 20:
+            self.grid = np.random.choice(2, size=((n+2)*(n+2)), p=[0.8, 0.2]).reshape(n+2, n+2)
+        else:
+            self.grid = np.random.choice(2, size=((n+2)*(n+2)), p=[0.75, 0.25]).reshape(n+2, n+2)
         self.grid[0, :] = 0
         self.grid[n+1,:]= 0
         self.grid[:, 0] = 0
@@ -39,7 +44,7 @@ class gameOfLife:
                     
     def takeSnapshot(self, showImage = False):  
         img = Image.fromarray(self.grid * 255, 'L')
-        img = img.resize((self.imageDimensionX, self.imageDimensionY), Image.ANTIALIAS)
+        # img = img.resize((self.imageDimensionX, self.imageDimensionY), Image.ANTIALIAS)
         img.save(self.folder + '/' + str(self.counter) + '.png')
         self.counter += 1
         if showImage == True:
@@ -98,6 +103,8 @@ if __name__ == "__main__":
         dimension = 100
         no_of_iterations = 20
         duration = 0.5
+    if dimension < 3 or no_of_iterations < 1 or duration < 0.1 or duration > 2.0:
+         sys.exit('dimension should be atleast 3. No of iterations should be sensible, not idiotic. 0.1 <= duration <= 2.0' ) 
     
     game = gameOfLife(dimension)
     
